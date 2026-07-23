@@ -756,7 +756,6 @@ body.hero-in .hero-trust{transition-delay:.86s}
 
 /* ============================================================
    MOBILE OPTIMIZATION — additive, overrides only on small screens.
-   Desktop layout above is untouched.
    ============================================================ */
 @media(max-width:820px){
   .section-pad{padding:92px 0}
@@ -765,22 +764,18 @@ body.hero-in .hero-trust{transition-delay:.86s}
   .site-header{padding:16px 20px}
   .lt-name{font-size:19px}
   .header-cta{padding:10px 16px;font-size:12px}
-  /* suite + devices intros stack cleanly */
   .suite-head{flex-direction:column;align-items:flex-start;gap:14px}
 }
 @media(max-width:600px){
   .section-pad{padding:76px 0}
   .wrap{width:min(1200px,calc(100% - 34px))}
-  /* hero: keep it commanding but never overflow narrow screens */
   .beat-hero h1{font-size:clamp(37px,10vw,52px)}
   .hero-sub{font-size:15px;margin-top:22px}
   .beat-hero .eyebrow{margin-bottom:20px}
   .hero-trust{margin-top:24px;font-size:10.5px;letter-spacing:.14em}
-  /* full-width, comfortable tap targets */
   .hero-ctas{width:100%;gap:12px}
   .hero-ctas .btn{width:100%;justify-content:center}
   .btn{padding:16px 26px}
-  /* in-film beats: a touch smaller so long lines don't wrap awkwardly */
   .beat-line h2{font-size:clamp(28px,8vw,44px)}
   .beat-line .beat-small{font-size:15px}
   .beat-callout .inner{padding:20px 22px}
@@ -788,20 +783,15 @@ body.hero-in .hero-trust{transition-delay:.86s}
   .beat-chips{gap:10px}
   .beat-chips .chip{padding:11px 16px}
   .beat-chips .chip b{font-size:18px}
-  /* section headings scale down gracefully */
   .kicker-row h2{font-size:clamp(30px,8.4vw,40px)}
   .kicker-row p{font-size:14px}
-  /* pricing / suite card breathing room */
   .price-card{padding:32px 26px}
   .suite-card{padding:28px 24px}
-  /* studio app + player fit the frame */
   #studio-app,#player-shell{width:min(940px,94vw)}
   .studio-head h2{font-size:clamp(26px,7.6vw,34px)}
-  /* marquee a little calmer */
   .mq{padding:26px 0}
   .mq-brand{padding-right:34px;gap:10px}
   .mq-brand svg{width:22px;height:22px}
-  /* device mockups: center + size for phone */
   .device-note{font-size:10px}
 }
 @media(max-width:380px){
@@ -1389,12 +1379,8 @@ function sizeCanvas(){
   _lastCanvasW = innerWidth; _lastCanvasH = innerHeight;
 }
 sizeCanvas();
-/* On mobile, scrolling shows/hides the URL bar -> a height-only "resize" that would
-   reset the canvas mid-scroll (visible jank). Only re-init on a real width change,
-   or a large height change (device rotation), never on the address-bar wobble. */
-addEventListener("resize", () => {
-  if (innerWidth !== _lastCanvasW || Math.abs(innerHeight - _lastCanvasH) > 160) sizeCanvas();
-});
+/* ignore mobile address-bar wobble (height-only resize) */
+addEventListener("resize", () => { if (innerWidth !== _lastCanvasW || Math.abs(innerHeight - _lastCanvasH) > 160) sizeCanvas(); });
 
 function nearestDecoded(idx){
   if (bmpCache.has(idx)) return idx;
@@ -2102,7 +2088,7 @@ const dvObserver = new IntersectionObserver(entries => {
     const v = en.target;
     if (en.isIntersecting){
       if (!v.src && v.dataset.src) v.src = v.dataset.src;
-      if (_coarse) $$("video.dv").forEach(o => { if (o !== v) o.pause(); }); // one at a time on phones
+      if (_coarse) $("video.dv").forEach(o => { if (o !== v) o.pause(); });
       v.play().catch(()=>{});
     } else v.pause();
   });
@@ -2137,7 +2123,7 @@ document.addEventListener("click", e => {
    REPLACE THIS URL with your Stripe Payment Link for the $389/mo
    subscription (Stripe Dashboard -> Product catalogue -> your plan ->
    Create payment link), e.g. https://buy.stripe.com/xxxxxxxx           */
-const STRIPE_LINK = "https://buy.stripe.com/9B68wO9ae7DmcKJ4VacV200";
+const STRIPE_LINK = "https://buy.stripe.com/28EaEWaei0aUfWVdrGcV201";
 document.addEventListener("click", e => {
   const btn = e.target.closest("[data-stripe]");
   if (!btn) return;
