@@ -1,0 +1,10 @@
+# Keep these OUT of the public site (build-only / repo files)
+.git
+.git/**
+.wrangler
+.wrangler/**
+.gitignore
+.assetsignore
+wrangler.jsonc
+node_modules
+*.md
