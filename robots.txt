@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://outbexa.com/sitemap.xml

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout — Outbexa</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23131114'/%3E%3Cpath d='M16 32L32 17.5 48 32' stroke='%23D9B879' stroke-width='3.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M26 36.5l14.5 8.75L26 54z' fill='%23D9B879'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#131114">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#131114;--paper:#F7F3EB;--limestone:#EAE3D4;--brass:#B98F4F;--brass-deep:#8F6A33;
+  --muted:#6F675A;--line:rgba(19,17,20,.14);--white:#FFFDF8;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --font-display:"Fraunces",serif;--font-body:"Instrument Sans",system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-body);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.55;min-height:100vh;display:flex;flex-direction:column}
+body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:var(--font-display);font-weight:400;line-height:1.08;letter-spacing:-.015em}
+.eyebrow{font-size:11px;letter-spacing:.34em;text-transform:uppercase;font-weight:600;color:var(--brass-deep)}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px clamp(20px,4vw,44px)}
+.lt-lockup{display:flex;align-items:center;gap:12px}
+.lt-mark{width:32px;height:32px}
+.lt-mark rect,.lt-mark path{stroke:currentColor}
+.lt-name{font-family:var(--font-display);font-size:20px;font-weight:500}
+.back{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;transition:color .3s}
+.back:hover{color:var(--ink)}
+.back svg{width:14px;height:14px}
+main{flex:1;width:min(1060px,calc(100% - 40px));margin:0 auto;padding:clamp(24px,4vh,56px) 0 80px}
+.checkout-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,3.5vw,56px);align-items:start}
+@media(max-width:880px){.checkout-grid{grid-template-columns:1fr}}
+.co-head h1{font-size:clamp(30px,4vw,44px);margin-top:14px}
+.co-head h1 em{font-style:italic;font-weight:300;color:var(--brass-deep)}
+.co-head p{margin-top:14px;color:var(--muted);font-size:15px;max-width:44ch}
+/* order card */
+.order-card{background:var(--ink);color:var(--paper);border-radius:20px;padding:clamp(28px,3.4vw,44px);position:relative;overflow:hidden;box-shadow:0 40px 100px -30px rgba(19,17,20,.5),inset 0 0 0 1px rgba(217,184,121,.28)}
+.order-card .glow{position:absolute;top:-40%;right:-25%;width:70%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(217,184,121,.2),transparent 65%);pointer-events:none}
+.order-tag{display:inline-flex;padding:7px 14px;border-radius:999px;font-size:10px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;background:rgba(217,184,121,.16);color:#EFD6A2;border:1px solid rgba(217,184,121,.35);margin-bottom:22px}
+.order-name{font-family:var(--font-display);font-size:clamp(24px,2.4vw,30px);font-weight:500}
+.order-amount{display:flex;align-items:baseline;gap:10px;margin:20px 0 4px}
+.order-amount .cur{font-family:var(--font-display);font-size:24px;color:var(--brass)}
+.order-amount .num{font-family:var(--font-display);font-size:clamp(52px,5.4vw,72px);line-height:1;letter-spacing:-.02em}
+.order-amount .per{font-size:13px;opacity:.55}
+.order-sub{font-size:13.5px;opacity:.65;margin-bottom:26px}
+.order-feats{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:30px;font-size:14px}
+.order-feats li{display:flex;gap:11px;align-items:flex-start}
+.order-feats svg{width:14px;height:14px;flex:none;margin-top:3px;color:#8FD49A}
+.order-line{border-top:1px solid rgba(247,243,235,.14);padding-top:18px;display:flex;justify-content:space-between;font-size:14px}
+.order-line b{font-weight:600}
+.order-line .today{color:#EFD6A2}
+.pay-btn{
+  margin-top:24px;width:100%;display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:19px 30px;border-radius:999px;border:0;cursor:pointer;
+  font-family:var(--font-body);font-size:15px;font-weight:600;letter-spacing:.02em;
+  background:linear-gradient(135deg,#CBA05C,#96702F);color:#FFF9EE;
+  box-shadow:0 18px 44px -14px rgba(143,106,51,.75);
+  transition:transform .4s var(--ease-out),box-shadow .4s var(--ease-out);
+  position:relative;overflow:hidden;
+}
+.pay-btn:hover{transform:translateY(-2px);box-shadow:0 26px 54px -14px rgba(143,106,51,.85)}
+.pay-btn svg{width:15px;height:15px}
+.pay-btn::after{content:"";position:absolute;top:0;bottom:0;left:-70%;width:45%;transform:skewX(-22deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.32),transparent);transition:left .7s var(--ease-out)}
+.pay-btn:hover::after{left:125%}
+.secure-row{margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:11.5px;color:rgba(247,243,235,.55)}
+.secure-row svg{width:12px;height:12px}
+.guarantee{margin-top:14px;text-align:center;font-size:11.5px;color:rgba(247,243,235,.45)}
+/* what happens next */
+.next-steps{margin-top:40px}
+.next-steps h2{font-size:clamp(20px,2vw,25px);margin-bottom:22px}
+.nstep{display:flex;gap:16px;padding:16px 0;border-top:1px solid var(--line)}
+.nstep .n{font-family:var(--font-display);font-style:italic;font-size:15px;color:var(--brass-deep);flex:none;width:34px}
+.nstep div b{display:block;font-weight:600;font-size:14.5px;margin-bottom:3px}
+.nstep div span{font-size:13.5px;color:var(--muted)}
+.co-note{margin-top:26px;font-size:12.5px;color:var(--muted)}
+.co-note a{color:var(--brass-deep);text-decoration:underline;text-underline-offset:3px}
+footer{padding:22px clamp(20px,4vw,44px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);border-top:1px solid var(--line)}
+.fade-in{opacity:0;transform:translateY(18px);animation:fi .9s var(--ease-out) forwards}
+@keyframes fi{to{opacity:1;transform:none}}
+.d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}
+@media (prefers-reduced-motion: reduce){.fade-in{animation:none;opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<header>
+  <a class="lt-lockup" href="index.html">
+    <svg class="lt-mark" viewBox="0 0 40 40" fill="none"><rect x="1.5" y="1.5" width="37" height="37" rx="9" stroke-width="1.6"/><path d="M10.5 19.5L20 11l9.5 8.5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 21.5l8.5 5.25-8.5 5.25z" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <span class="lt-name">Outbexa</span>
+  </a>
+  <a class="back" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>Back to Outbexa</a>
+</header>
+
+<main>
+  <div class="checkout-grid">
+    <div>
+      <div class="co-head fade-in d1">
+        <div class="eyebrow">Checkout</div>
+        <h1>You&rsquo;re one step from <em>your first tour.</em></h1>
+        <p>Start your plan today and your first cinematic tour can be working for a listing this week.</p>
+      </div>
+      <div class="next-steps fade-in d2">
+        <h2>What happens after payment</h2>
+        <div class="nstep"><span class="n">01</span><div><b>Instant confirmation</b><span>Your receipt and welcome email arrive immediately.</span></div></div>
+        <div class="nstep"><span class="n">02</span><div><b>Onboarding call</b><span>Book your onboarding call straight from the confirmation page&mdash;15 minutes to set up your account.</span></div></div>
+        <div class="nstep"><span class="n">03</span><div><b>Send your photos</b><span>Upload your first listing&rsquo;s photos&mdash;about 5 minutes.</span></div></div>
+        <div class="nstep"><span class="n">04</span><div><b>Your tour, in 72 hours</b><span>Vertical cut for social, horizontal cut for MLS and your website.</span></div></div>
+      </div>
+      <p class="co-note fade-in d3">Questions before you start? <a href="index.html#faq">Read the FAQ</a> or <a href="#" id="call-link">book a discovery call</a> instead.</p>
+    </div>
+
+    <div class="order-card fade-in d2">
+      <span class="glow"></span>
+      <span class="order-tag">The Listing Marketing Plan</span>
+      <div class="order-name">Outbexa Monthly</div>
+      <div class="order-amount"><span class="cur">$</span><span class="num">389</span><span class="per">per month</span></div>
+      <div class="order-sub">Up to five cinematic property tours a month&mdash;yours forever, unlimited usage.</div>
+      <ul class="order-feats">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12.5l5 5L20 6.5"/></svg>Up to 5 cinematic tours every month</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12.5l5 5L20 6.5"/></svg>Vertical cut for Reels, TikTok &amp; Stories</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12.5l5 5L20 6.5"/></svg>Horizontal cut for MLS &amp; your website</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12.5l5 5L20 6.5"/></svg>Delivered within 72 hours</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12.5l5 5L20 6.5"/></svg>Own every film forever&mdash;unlimited usage rights</li>
+      </ul>
+      <div class="order-line"><span>Billed monthly, cancel anytime</span><span></span></div>
+      <div class="order-line" style="margin-top:10px"><b>Due today</b><b class="today">$389.00</b></div>
+      <button class="pay-btn" id="pay-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        Proceed to Secure Payment
+      </button>
+      <div class="secure-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg>
+        Payment processed securely by Stripe &middot; Card details never touch our site
+      </div>
+      <div class="guarantee">Films are yours to keep, always &middot; Cancel anytime from your receipt</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>&copy; 2026 Outbexa, Inc. All rights reserved.</span>
+  <span>Secure checkout &middot; Powered by Stripe</span>
+</footer>
+
+<script>
+/* ------------------------------------------------------------------
+   REPLACE with your Stripe Payment Link for the $389/mo subscription
+   (Stripe Dashboard -> Product catalogue -> plan -> Create payment link)
+   ------------------------------------------------------------------ */
+const STRIPE_LINK = "https://buy.stripe.com/9B68wO9ae7DmcKJ4VacV200";
+const CALENDLY_URL = "https://calendly.com/jackie-jackie-ai/outbexa-discovery-call";
+
+document.getElementById("pay-btn").addEventListener("click", () => {
+  if (STRIPE_LINK.indexOf("http") === 0){ window.location.href = STRIPE_LINK; }
+  else { alert("Payment link not configured yet — set STRIPE_LINK in checkout.html to your Stripe Payment Link."); }
+});
+document.getElementById("call-link").addEventListener("click", e => {
+  e.preventDefault();
+  window.open(CALENDLY_URL, "_blank", "noopener");
+});
+</script>
+</body>
+</html>
