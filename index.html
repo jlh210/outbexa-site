@@ -125,6 +125,7 @@ h1,h2,h3,.display{font-family:var(--font-display);font-weight:400;line-height:1.
 img,canvas,video,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.btn,.header-cta,.angle-chip,summary,a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 
 /* ---------- shared atoms ---------- */
 .eyebrow{
@@ -200,9 +201,9 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 
 /* ---------- THE FILM ---------- */
 #film-scroll{position:relative;height:780vh;background:var(--ink)}
-#film-stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--ink)}
+#film-stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--ink);contain:layout paint;transform:translateZ(0)}
 #film-poster,#film-canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-#film-canvas{z-index:2}
+#film-canvas{z-index:2;transform:translateZ(0);backface-visibility:hidden;will-change:transform}
 #ambient-canvas{position:absolute;inset:0;z-index:4;pointer-events:none}
 .film-grain{
   position:absolute;inset:-40%;z-index:5;pointer-events:none;opacity:.16;mix-blend-mode:overlay;
@@ -674,6 +675,7 @@ footer{background:var(--ink);color:rgba(247,243,235,.65);border-top:1px solid rg
 .socials svg{width:14px;height:14px;fill:currentColor}
 
 /* ---------- luxury details ---------- */
+@media(pointer:coarse){ body::after{ display:none } }
 body::after{ /* whisper of grain over the whole site */
   content:"";position:fixed;inset:0;z-index:70;pointer-events:none;opacity:.018;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
@@ -1479,7 +1481,7 @@ function nextCaptureIndex(){
 }
 function pump(){
   if (seeking || captureDone || filmFailed || directMode) return;
-  if (Math.abs(scrollVel) > 55 && capturedCount > 12){ setTimeout(pump, 150); return; } // yield to the scroll
+  if (Math.abs(scrollVel) > 26 && capturedCount > 12){ setTimeout(pump, 120); return; } // yield to the scroll
   const here = chapterOf(Math.round(currentFrame));
   ensureCap(here);
   if (capturedCount > FPC * 0.2) ensureCap(here + 1);           // stream the next room ahead of arrival
@@ -1599,7 +1601,7 @@ function hqStep(){
   if (hqDone) return;
   const idx = nextHqIndex();
   if (idx < 0){ hqDone = true; if (hqVid){ hqVid.src = ""; hqVid.remove(); hqVid = null; } return; }
-  if (Math.abs(scrollVel) > 40){ setTimeout(hqStep, 220); return; }   // never fight the scroll
+  if (Math.abs(scrollVel) > 6){ setTimeout(hqStep, 200); return; }    // run 4K upgrades only at rest
   const c = chapterOf(idx);
   if (c !== hqChapter || !hqReady){ hqLoadChapter(c); return; }
   hqCur = idx;
@@ -1693,7 +1695,7 @@ if (matchMedia("(pointer:fine)").matches && !reduceMotion){
     pointerSeen = true;
     mxT = (e.clientX / innerWidth  - 0.5);
     myT = (e.clientY / innerHeight - 0.5);
-  });
+  }, { passive: true });
 }
 
 /* ---------- ambient golden dust over the hero ---------- */
@@ -2076,7 +2078,7 @@ if (matchMedia("(pointer:fine)").matches && !reduceMotion){
     if (!cursorLive){ cursorLive = true; rx = cx; ry = cy; dot.style.opacity = 1; ring.style.opacity = 1; }
     const hot = e.target.closest && e.target.closest("a,button,summary,.angle-chip");
     ring.classList.toggle("is-link", !!hot);
-  });
+  }, { passive: true });
   (function cursorTick(){
     rx += (cx - rx) * 0.16; ry += (cy - ry) * 0.16;
     dot.style.left = cx + "px"; dot.style.top = cy + "px";
@@ -2094,11 +2096,13 @@ if (matchMedia("(pointer:fine)").matches && !reduceMotion){
 });
 
 /* device mockup films: lazy src + play only in view */
+const _coarse = matchMedia("(pointer:coarse)").matches;
 const dvObserver = new IntersectionObserver(entries => {
   entries.forEach(en => {
     const v = en.target;
     if (en.isIntersecting){
       if (!v.src && v.dataset.src) v.src = v.dataset.src;
+      if (_coarse) $$("video.dv").forEach(o => { if (o !== v) o.pause(); }); // one at a time on phones
       v.play().catch(()=>{});
     } else v.pause();
   });
